@@ -1,4 +1,26 @@
 
+** Version: libibumad-1.3.8
+
+Thu Aug 2 10:19:37 2012 +0300 Alex Netes
+aeac802d2f3f5fd91fd3b8c702dba23ccdccff89
+
+	* management: packages versions update
+
+Thu Aug 2 10:16:59 2012 +0300 Alex Netes
+982f2110c73bac874fff3abd9f1c1fe66265fbd9
+
+	* libibumad: update shared library versions
+
+Sat Jul 7 14:42:25 2012 -0700 Ira Weiny
+73639fad2621590dc24352881b28c57286de1fe0
+
+	* libibumad: update umad_recv man page.
+
+Wed Jul 6 14:39:18 2011 -0700 Ira Weiny
+b6a4397d82ba1d226976ada45c90bcfbbb9c9025
+
+	* libibumad: Remove OpenSM reference from COPYING file
+
 ** Version: libibumad-1.3.7
 
 Mon Feb 14 12:26:37 2011 +0200 Alex Netes
