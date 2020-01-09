@@ -46,7 +46,6 @@
 #include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <dirent.h>
-#include <stdlib.h>
 #include <ctype.h>
 
 #include "umad.h"
@@ -158,6 +157,11 @@ static int get_port(char *ca_name, char *dir, int portnum, umad_port_t * port)
 		goto clean;
 	if (sys_read_uint(port_dir, SYS_PORT_CAPMASK, &port->capmask) < 0)
 		goto clean;
+
+	if (sys_read_string(port_dir, SYS_PORT_LINK_LAYER,
+	    port->link_layer, UMAD_CA_NAME_LEN) < 0)
+		/* assume IB by default */
+		sprintf(port->link_layer, "IB");
 
 	port->capmask = htonl(port->capmask);
 

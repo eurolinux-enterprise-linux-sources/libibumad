@@ -4,12 +4,12 @@
 
 Summary: OpenFabrics Alliance InfiniBand umad (user MAD) library
 Name: libibumad
-Version: 1.3.4
+Version: 1.3.7
 Release: %rel%{?dist}
 License: GPLv2 or BSD
 Group: System Environment/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Source: http://www.openfabrics.org/downloads/management/libibumad-1.3.4.tar.gz
+Source: http://www.openfabrics.org/downloads/management/libibumad-1.3.7.tar.gz
 Url: http://openfabrics.org
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig

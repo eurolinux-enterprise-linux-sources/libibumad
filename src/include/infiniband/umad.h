@@ -34,6 +34,7 @@
 #define _UMAD_H
 
 #include <stdint.h>
+#include <stdlib.h>
 
 #ifdef __cplusplus
 #  define BEGIN_C_DECLS extern "C" {
@@ -44,7 +45,7 @@
 #endif				/* __cplusplus */
 
 BEGIN_C_DECLS
-#define UMAD_MAX_DEVICES 20
+#define UMAD_MAX_DEVICES 32
 #define UMAD_ANY_PORT	0
 typedef struct ib_mad_addr {
 	uint32_t qpn;
@@ -116,6 +117,7 @@ typedef struct ib_user_mad {
 #define SYS_PORT_RATE		"rate"
 #define SYS_PORT_GUID		"port_guid"
 #define SYS_PORT_GID		"gids/0"
+#define SYS_PORT_LINK_LAYER	"link_layer"
 
 typedef struct umad_port {
 	char ca_name[UMAD_CA_NAME_LEN];
@@ -132,6 +134,7 @@ typedef struct umad_port {
 	uint64_t port_guid;
 	unsigned pkeys_size;
 	uint16_t *pkeys;
+	char link_layer[UMAD_CA_NAME_LEN];
 } umad_port_t;
 
 typedef struct umad_ca {
