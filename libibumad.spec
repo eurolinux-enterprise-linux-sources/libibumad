@@ -1,7 +1,7 @@
 Summary: OpenFabrics Alliance InfiniBand umad (user MAD) library
 Name: libibumad
-Version: 1.3.8
-Release: 3%{?dist}
+Version: 1.3.9
+Release: 1%{?dist}
 License: GPLv2 or BSD
 Group: System Environment/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -9,7 +9,10 @@ Source: http://www.openfabrics.org/downloads/management/%{name}-%{version}.tar.g
 Url: http://www.openfabrics.org
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
-BuildRequires: libtool, automake, autoconf, glibc-static
+BuildRequires: glibc-static
+%ifnarch ia64 %{sparc}
+BuildRequires: valgrind-devel
+%endif
 ExcludeArch: s390 s390x
 
 %description
@@ -37,7 +40,11 @@ Static version of the libibumad library.
 %setup -q
 
 %build
+%ifnarch ia64 %{sparc}
+%configure --with-valgrind
+%else
 %configure
+%endif
 make %{?_smp_mflags}
 
 %install
@@ -68,6 +75,10 @@ rm -rf %{buildroot}
 %{_libdir}/libibumad.a
 
 %changelog
+* Thu Oct 09 2014 Doug Ledford <dledford@redhat.com> - 1.3.9-1
+- Update to latest upstream release (needed by other packages)
+- Related: bz1092538
+
 * Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1.3.8-3
 - Mass rebuild 2013-12-27
 
