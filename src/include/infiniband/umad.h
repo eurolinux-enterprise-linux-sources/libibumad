@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2004-2009 Voltaire Inc.  All rights reserved.
- * Copyright (c) 2014 Intel Corporation.  All rights reserved.
  *
  * This software is available to you under a choice of one of two
  * licenses.  You may choose to be licensed under the terms of the GNU
@@ -36,8 +35,6 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <byteswap.h>
-#include <arpa/inet.h>
 
 #ifdef __cplusplus
 #  define BEGIN_C_DECLS extern "C" {
@@ -48,26 +45,21 @@
 #endif				/* __cplusplus */
 
 BEGIN_C_DECLS
-
-typedef uint16_t be16_t;
-typedef uint32_t be32_t;
-typedef uint64_t be64_t;
-
 #define UMAD_MAX_DEVICES 32
 #define UMAD_ANY_PORT	0
 typedef struct ib_mad_addr {
-	be32_t qpn;
-	be32_t qkey;
-	be16_t lid;
+	uint32_t qpn;
+	uint32_t qkey;
+	uint16_t lid;
 	uint8_t sl;
 	uint8_t path_bits;
 	uint8_t grh_present;
 	uint8_t gid_index;
 	uint8_t hop_limit;
 	uint8_t traffic_class;
-	uint8_t gid[16]; /* network-byte order */
-	be32_t flow_label;
-	be16_t pkey_index;
+	uint8_t gid[16];
+	uint32_t flow_label;
+	uint16_t pkey_index;
 	uint8_t reserved[6];
 } ib_mad_addr_t;
 
@@ -91,8 +83,6 @@ typedef struct ib_user_mad {
 					      struct ib_user_mad_reg_req)
 #define IB_USER_MAD_UNREGISTER_AGENT	_IOW(IB_IOCTL_MAGIC, 2, uint32_t)
 #define IB_USER_MAD_ENABLE_PKEY		_IO(IB_IOCTL_MAGIC, 3)
-#define IB_USER_MAD_REGISTER_AGENT2     _IOWR(IB_IOCTL_MAGIC, 4, \
-					      struct ib_user_mad_reg_req2)
 
 #define UMAD_CA_NAME_LEN	20
 #define UMAD_CA_MAX_PORTS	10	/* 0 - 9 */
@@ -163,16 +153,16 @@ int umad_init(void);
 int umad_done(void);
 
 int umad_get_cas_names(char cas[][UMAD_CA_NAME_LEN], int max);
-int umad_get_ca_portguids(const char *ca_name, uint64_t * portguids, int max);
+int umad_get_ca_portguids(char *ca_name, uint64_t * portguids, int max);
 
-int umad_get_ca(const char *ca_name, umad_ca_t * ca);
+int umad_get_ca(char *ca_name, umad_ca_t * ca);
 int umad_release_ca(umad_ca_t * ca);
-int umad_get_port(const char *ca_name, int portnum, umad_port_t * port);
+int umad_get_port(char *ca_name, int portnum, umad_port_t * port);
 int umad_release_port(umad_port_t * port);
 
-int umad_get_issm_path(const char *ca_name, int portnum, char path[], int max);
+int umad_get_issm_path(char *ca_name, int portnum, char path[], int max);
 
-int umad_open_port(const char *ca_name, int portnum);
+int umad_open_port(char *ca_name, int portnum);
 int umad_close_port(int portid);
 
 void *umad_get_mad(void *umad);
@@ -199,25 +189,11 @@ int umad_register_oui(int portid, int mgmt_class, uint8_t rmpp_version,
 		      uint8_t oui[3], long method_mask[16 / sizeof(long)]);
 int umad_unregister(int portid, int agentid);
 
-enum {
-	UMAD_USER_RMPP = (1 << 0)
-};
-
-struct umad_reg_attr {
-	uint8_t    mgmt_class;
-	uint8_t    mgmt_class_version;
-	uint32_t   flags;
-	uint64_t   method_mask[2];
-	uint32_t   oui;
-	uint8_t    rmpp_version;
-};
-
-int umad_register2(int port_fd, struct umad_reg_attr *attr,
-		   uint32_t *agent_id);
-
 int umad_debug(int level);
 void umad_addr_dump(ib_mad_addr_t * addr);
 void umad_dump(void *umad);
+
+#include <stdlib.h>
 
 static inline void *umad_alloc(int num, size_t size)
 {				/* alloc array of umad buffers */
@@ -228,17 +204,6 @@ static inline void umad_free(void *umad)
 {
 	free(umad);
 }
-
-#ifndef ntohll
-  #if __BYTE_ORDER == __LITTLE_ENDIAN
-    #define ntohll(x) bswap_64(x)
-  #elif __BYTE_ORDER == __BIG_ENDIAN
-    #define ntohll(x) x
-  #endif
-#endif
-#ifndef htonll
-  #define htonll ntohll
-#endif
 
 END_C_DECLS
 #endif				/* _UMAD_H */

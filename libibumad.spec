@@ -1,19 +1,16 @@
 Summary: OpenFabrics Alliance InfiniBand umad (user MAD) library
 Name: libibumad
-Version: 1.3.10.2
-Release: 1%{?dist}
+Version: 1.3.8
+Release: 2%{?dist}
 License: GPLv2 or BSD
 Group: System Environment/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source: http://www.openfabrics.org/downloads/management/%{name}-%{version}.tar.gz
 Url: http://www.openfabrics.org
-Requires: rdma
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
-BuildRequires: glibc-static
-%ifnarch ia64 %{sparc} s390 s390x
-BuildRequires: valgrind-devel
-%endif
+BuildRequires: libtool, automake, autoconf, glibc-static
+ExcludeArch: s390 s390x
 
 %description
 libibumad provides the user MAD library functions which sit on top of 
@@ -40,11 +37,7 @@ Static version of the libibumad library.
 %setup -q
 
 %build
-%ifnarch ia64 %{sparc} s390 s390x
-%configure --with-valgrind
-%else
 %configure
-%endif
 make %{?_smp_mflags}
 
 %install
@@ -75,20 +68,6 @@ rm -rf %{buildroot}
 %{_libdir}/libibumad.a
 
 %changelog
-* Fri Jun 05 2015 Doug Ledford <dledford@redhat.com> - 1.3.10.2-1
-- Update to latest upstream release
-- Pick up OPA MAD support
-- Drop s390 restriction
-- Resolves: bz1169962
-- Related: bz1186159
-
-* Thu Oct 09 2014 Doug Ledford <dledford@redhat.com> - 1.3.9-1
-- Update to latest upstream release (needed by other packages)
-- Related: bz1092538
-
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1.3.8-3
-- Mass rebuild 2013-12-27
-
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

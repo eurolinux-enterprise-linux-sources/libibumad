@@ -1,9 +1,7 @@
 ACLOCAL_AMFLAGS = -I config
 SUBDIRS = .
 
-INCLUDES = -I$(srcdir)/include/infiniband \
-	   -I$(srcdir)/include \
-	   -I$(includedir)
+INCLUDES = -I$(srcdir)/include/infiniband -I$(includedir)
 
 man_MANS = man/umad_debug.3 man/umad_get_ca.3 \
 	   man/umad_get_ca_portguids.3 man/umad_get_cas_names.3 \
@@ -16,17 +14,12 @@ man_MANS = man/umad_debug.3 man/umad_get_ca.3 \
 	   man/umad_set_addr_net.3 man/umad_set_addr.3 man/umad_set_pkey.3 \
 	   man/umad_get_pkey.3 \
 	   man/umad_register.3 man/umad_register_oui.3 man/umad_unregister.3 \
-	   man/umad_register2.3 \
 	   man/umad_send.3 man/umad_recv.3 man/umad_poll.3 \
-	   man/umad_get_issm_path.3 \
-	   man/umad_attribute_str.3 \
-	   man/umad_class_str.3 \
-	   man/umad_mad_status_str.3 \
-	   man/umad_method_str.3
+	   man/umad_get_issm_path.3
 
 lib_LTLIBRARIES = libibumad.la
 
-libibumad_la_CFLAGS = -Wall -Wwrite-strings
+libibumad_la_CFLAGS = -Wall
 
 if HAVE_LD_VERSION_SCRIPT
 libibumad_version_script = -Wl,--version-script=$(srcdir)/src/libibumad.map
@@ -34,26 +27,14 @@ else
 libibumad_version_script =
 endif
 
-libibumad_la_SOURCES = src/umad.c src/sysfs.c src/umad_str.c
+libibumad_la_SOURCES = src/umad.c src/sysfs.c
 libibumad_la_LDFLAGS = -version-info $(ibumad_api_version) \
     -export-dynamic $(libibumad_version_script)
 libibumad_la_DEPENDENCIES = $(srcdir)/src/libibumad.map
 
 libibumadincludedir = $(includedir)/infiniband
 
-TESTS = tests/umad_register2 tests/umad_reg2_compat
-check_PROGRAMS = tests/umad_register2 tests/umad_reg2_compat
-tests_umad_register2_SOURCES = tests/umad_register2.c
-tests_umad_register2_LDFLAGS = libibumad.la
-tests_umad_reg2_compat_SOURCES = tests/umad_reg2_compat.c
-tests_umad_reg2_compat_LDFLAGS = libibumad.la
-
-libibumadinclude_HEADERS = $(srcdir)/include/infiniband/umad.h \
-	$(srcdir)/include/infiniband/umad_types.h \
-	$(srcdir)/include/infiniband/umad_sa.h \
-	$(srcdir)/include/infiniband/umad_sm.h \
-	$(srcdir)/include/infiniband/umad_cm.h \
-	$(srcdir)/include/infiniband/umad_str.h
+libibumadinclude_HEADERS = $(srcdir)/include/infiniband/umad.h
 
 EXTRA_DIST = $(srcdir)/include/infiniband/umad.h \
 	libibumad.spec.in libibumad.spec \
